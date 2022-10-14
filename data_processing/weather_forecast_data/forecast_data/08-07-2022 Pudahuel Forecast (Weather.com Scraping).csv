@@ -1,0 +1,15 @@
+,date,t_min,t_max,humidity_day,humidity_night,wind_speed,sunshine_duration,weather_condition
+0,08-07-2022,3°,15°,72%,93%,SSE 14 km/h,0 days 10:02:00,Mayormente soleado
+1,09-07-2022,4°,10°,85%,91%,NE 13 km/h,0 days 10:03:00,Lluvia
+2,10-07-2022,2°,8°,93%,96%,E 8 km/h,0 days 10:04:00,Lluvia
+3,11-07-2022,0°,11°,84%,83%,E 8 km/h,0 days 10:05:00,Chubascos
+4,12-07-2022,3°,13°,67%,79%,ESE 9 km/h,0 days 10:05:00,Parcialmente nublado
+5,13-07-2022,1°,10°,79%,93%,SSE 11 km/h,0 days 10:07:00,Lluvia
+6,14-07-2022,0°,10°,84%,90%,ESE 9 km/h,0 days 10:07:00,Lluvia débil
+7,15-07-2022,0°,11°,75%,82%,ESE 9 km/h,0 days 10:08:00,Chubascos
+8,16-07-2022,1°,12°,71%,79%,ESE 9 km/h,0 days 10:10:00,Mayormente soleado
+9,17-07-2022,1°,13°,66%,81%,ESE 9 km/h,0 days 10:10:00,Parcialmente nublado
+10,18-07-2022,1°,13°,72%,79%,ESE 9 km/h,0 days 10:12:00,Chubascos matinales
+11,19-07-2022,1°,13°,65%,77%,ESE 10 km/h,0 days 10:12:00,Soleado
+12,20-07-2022,2°,13°,68%,78%,ESE 10 km/h,0 days 10:14:00,Parcialmente nublado
+13,21-07-2022,2°,14°,66%,76%,ESE 9 km/h,0 days 10:15:00,Mayormente soleado

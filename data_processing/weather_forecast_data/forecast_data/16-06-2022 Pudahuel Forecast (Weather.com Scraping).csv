@@ -1,0 +1,15 @@
+,date,t_min,t_max,humidity_day,humidity_night,wind_speed,sunshine_duration,weather_condition
+0,16-06-2022,0°,12°,80%,92%,SSO 11 km/h,0 days 09:57:00,Parcialmente nublado
+1,17-06-2022,2°,15°,68%,74%,SE 10 km/h,0 days 09:56:00,Mayormente soleado
+2,18-06-2022,5°,17°,55%,68%,SE 10 km/h,0 days 09:56:00,Parcialmente nublado
+3,19-06-2022,4°,15°,61%,77%,SSE 9 km/h,0 days 09:56:00,Nublado
+4,20-06-2022,5°,14°,70%,83%,SSE 10 km/h,0 days 09:56:00,Nublado
+5,21-06-2022,4°,11°,82%,97%,SSE 11 km/h,0 days 09:56:00,Lluvia
+6,22-06-2022,2°,11°,87%,95%,E 11 km/h,0 days 09:56:00,Lluvia
+7,23-06-2022,2°,11°,82%,90%,ESE 10 km/h,0 days 09:56:00,Chubascos
+8,24-06-2022,2°,13°,76%,83%,SSE 10 km/h,0 days 09:56:00,Parcialmente nublado
+9,25-06-2022,2°,13°,68%,80%,ESE 10 km/h,0 days 09:57:00,Muy nublado
+10,26-06-2022,3°,13°,70%,84%,SE 10 km/h,0 days 09:57:00,Chubascos por la tarde
+11,27-06-2022,3°,13°,75%,87%,SE 11 km/h,0 days 09:57:00,Chubascos
+12,28-06-2022,4°,14°,74%,84%,ESE 10 km/h,0 days 09:58:00,Chubascos
+13,29-06-2022,4°,15°,69%,79%,ESE 10 km/h,0 days 09:57:00,Chubascos

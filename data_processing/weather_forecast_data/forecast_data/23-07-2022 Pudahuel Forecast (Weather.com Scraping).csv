@@ -1,0 +1,15 @@
+,date,t_min,t_max,humidity_day,humidity_night,wind_speed,sunshine_duration,weather_condition
+0,23-07-2022,5°,18°,72%,92%,S 12 km/h,0 days 10:17:00,Mayormente soleado
+1,24-07-2022,5°,16°,78%,93%,S 10 km/h,0 days 10:19:00,Parcialmente nublado
+2,25-07-2022,5°,16°,82%,93%,SSO 12 km/h,0 days 10:20:00,Nubes por la mañana / Sol por la tarde
+3,26-07-2022,5°,16°,78%,92%,SO 13 km/h,0 days 10:21:00,Parcialmente nublado
+4,27-07-2022,4°,15°,82%,92%,SO 13 km/h,0 days 10:23:00,Muy nublado
+5,28-07-2022,6°,17°,70%,72%,SE 11 km/h,0 days 10:24:00,Soleado
+6,29-07-2022,6°,18°,56%,79%,SE 11 km/h,0 days 10:25:00,Muy nublado
+7,30-07-2022,5°,15°,77%,92%,S 11 km/h,0 days 10:27:00,Chubascos matinales
+8,31-07-2022,5°,16°,78%,92%,SO 12 km/h,0 days 10:28:00,Muy nublado
+9,01-08-2022,4°,15°,78%,93%,SO 12 km/h,0 days 10:30:00,Parcialmente nublado
+10,02-08-2022,3°,15°,76%,86%,SO 11 km/h,0 days 10:32:00,Parcialmente nublado
+11,03-08-2022,3°,15°,69%,81%,SSE 12 km/h,0 days 10:32:00,Parcialmente nublado
+12,04-08-2022,3°,13°,69%,83%,SSE 11 km/h,0 days 10:34:00,Parcialmente nublado
+13,05-08-2022,3°,14°,68%,85%,SSE 11 km/h,0 days 10:36:00,Parcialmente nublado

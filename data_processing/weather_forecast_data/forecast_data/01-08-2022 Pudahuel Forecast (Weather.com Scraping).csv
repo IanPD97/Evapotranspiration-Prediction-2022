@@ -1,0 +1,15 @@
+,date,t_min,t_max,humidity_day,humidity_night,wind_speed,sunshine_duration,weather_condition
+0,01-08-2022,4°,14°,84%,95%,SSO 13 km/h,0 days 10:30:00,Nubes por la mañana / Sol por la tarde
+1,02-08-2022,3°,15°,80%,92%,SSO 12 km/h,0 days 10:32:00,Parcialmente nublado
+2,03-08-2022,3°,15°,78%,93%,SSO 15 km/h,0 days 10:32:00,Parcialmente nublado
+3,04-08-2022,3°,17°,71%,84%,S 13 km/h,0 days 10:34:00,Parcialmente nublado
+4,05-08-2022,4°,18°,64%,82%,S 13 km/h,0 days 10:36:00,Parcialmente nublado
+5,06-08-2022,5°,14°,77%,93%,SSO 13 km/h,0 days 10:37:00,Chubascos por la tarde
+6,07-08-2022,3°,13°,78%,88%,S 12 km/h,0 days 10:39:00,Chubascos
+7,08-08-2022,2°,15°,67%,81%,S 12 km/h,0 days 10:41:00,Parcialmente nublado
+8,09-08-2022,3°,15°,64%,83%,S 11 km/h,0 days 10:42:00,Parcialmente nublado
+9,10-08-2022,3°,15°,68%,83%,S 12 km/h,0 days 10:44:00,Parcialmente nublado
+10,11-08-2022,4°,16°,67%,82%,S 12 km/h,0 days 10:46:00,Parcialmente nublado
+11,12-08-2022,5°,17°,63%,76%,SSE 12 km/h,0 days 10:47:00,Mayormente soleado
+12,13-08-2022,5°,16°,63%,83%,S 12 km/h,0 days 10:49:00,Muy nublado
+13,14-08-2022,5°,16°,70%,87%,S 13 km/h,0 days 10:51:00,Parcialmente nublado
