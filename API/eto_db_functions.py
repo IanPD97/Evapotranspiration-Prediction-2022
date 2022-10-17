@@ -11,13 +11,14 @@ from settings.crop_settings import mint
 from DL.CNN import tcn_prediction as tcnn
 
 # VARIABLES
-DEG_TO_RAD_CONSTANT = 0.01745329251         # Constante para transformar la latitud a radianes
-lat = -33.3971255                           # Latitud del lugar donde se realiza el experimento
-lat_rad = float(lat) *  DEG_TO_RAD_CONSTANT # Transformación a radianes
-num = 6                                     # Número de modelos en el ensemble de TCN
-savename = 'DL/tcn-models/model_0-'         # Ruta de los modelos entrenados
-forecast_horizon = 7                        # Horizonte de predicciones
-
+config = {
+    'DEG_TO_RAD_CONSTANT' : 0.01745329251,          # Constante para transformar la latitud a radianes
+    'lat' : -33.3971255,                            # Latitud del lugar donde se realiza el experimento
+    'lat_rad' : float(-33.3971255) * 0.01745329251, # Transformación a radianes
+    'num' : 6,                                      # Número de modelos en el ensemble de TCN
+    'savename' : 'DL/tcn-models/model_0-',          # Ruta de los modelos entrenados
+    'forecast_horizon' : 7                          # Horizonte de predicciones
+}
 
 # FUNCIONES
 def tensorflow_ignore():
@@ -42,8 +43,8 @@ def tensorflow_ignore():
         pass
 
 def compute_irrigation_value(computed_eto):
-    irrigation_value = (computed_eto*mint['kc_ini']*mint['A']*(mint['PC']/100))/mint['Er']
-    return irrigation_value
+    water_demand = ((computed_eto*mint['kc_ini']*mint['A']*(mint['PC']/100))/mint['Er'])*1000
+    return water_demand
 
 def get_climatic_data(session):
     """ Obtener la información climática del día necesaria para realizar
@@ -84,8 +85,8 @@ def compute_eto(session,today):
                         'ssh':[ssh]}).set_index('date')
             df.index = pd.to_datetime(df.index,format='%d-%m-%Y')
             df['rs'] = calc_rad_sol_in(tindex = df.index,
-                                    lat = lat_rad,
-                                    n = df.ssh*daylight_hours(df.index,lat_rad)[0])
+                                    lat = config['lat_rad'],
+                                    n = df.ssh*daylight_hours(df.index,config['lat_rad'])[0])
             computed_eto = pm_fao56(tmean = df.tmean,
                                     tmin = df.tmin,
                                     tmax = df.tmax,
@@ -94,7 +95,7 @@ def compute_eto(session,today):
                                     rhmax = df.rhmax,
                                     wind = df.wind,
                                     rs = df.rs,
-                                    lat = lat_rad,
+                                    lat = config['lat_rad'],
                                     elevation = 20.0).values[0]
             eto = db.computedEto(value_date = today,computed_eto = computed_eto,irrigation_value = compute_irrigation_value(computed_eto))
             session.add(eto)
@@ -119,8 +120,8 @@ def predict_eto(session,today):
             for eto in eto_back:
                 test.append(eto[0])
             test = pd.Series(test)
-            models = tcnn.loadModels(savename = savename, num = num)
-            for i in range(forecast_horizon):
+            models = tcnn.loadModels(savename = config['savename'], num = config['num'])
+            for i in range(config['forecast_horizon']):
                 predicted_values = tcnn.probabilisticForecast(test=test,models=models)
                 predicted_value = predicted_values[0][0].sample(1000).mean()
                 test = pd.Series(np.insert(np.array(test),len(test),predicted_value))

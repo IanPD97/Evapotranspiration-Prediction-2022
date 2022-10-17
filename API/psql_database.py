@@ -36,6 +36,11 @@ class predictedEto(Base):
     predicted_eto = Column(Float(), nullable = False)  # Valor predicho
     predicted_irrigation_value = Column(Float(), nullable = False)
 
+class waterAmount(Base):
+    __tablename__ = 'water_amount'
+    value_date = Column(Date(), primary_key = True)
+    water_amount = Column(Float(), nullable = False)
+
 if __name__ == '__main__':
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)

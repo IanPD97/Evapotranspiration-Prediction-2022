@@ -8,7 +8,8 @@ postgresql = {
 
 mqtt_settings = {
     'ip': '192.168.1.111',  # Dirección IP de la Raspberry pi
-    'port': 1883            # Puerto del servidor Mosquitto
+    'port': 1883,           # Puerto del servidor Mosquitto
+    'interval': 5,          # Intervalo de envío de los datos (Debe ser el mismo que el arduino)
 }
 
 openWeatherMap_settings = {
