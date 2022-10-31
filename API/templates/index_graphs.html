@@ -46,10 +46,13 @@
             <br>
 
             <div class="col-5 jumbotron p-2 mx-1">
-                <h1 class="sensor2">Sensor :</h1>
+                <h1 class="sensor2"> Sensor :</h1>
             </div>
             <br>
-
+            <div class="col-5 jumbotron p-2 mx-1">
+                <h1 class="sensor3"> Sensor :</h1>
+            </div>
+            <br>
 
 
         </div>
@@ -90,49 +93,74 @@
             </div>
         </div>
     </div>
+<br>
+<br>
+<br>
+
+    <div class="container-fluid">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="container-fluid" id="data-soilmoisture">
+
+            </div>
+        </div>
+    </div>
 
 
     <script>
         var chartTemperatue;
         var chartHumidity;
-
+        var chartSoilMoisture;
         function requestData()
         {
             // Ajax call to get the Data from Flask
             var requests = $.get('/data');
-
             var tm = requests.done(function (result)
             {
                 // Temperature
                 var seriesTemperature = chartTemperatue.series[0],
                     shiftTemperature = seriesTemperature.data.length > 20;
 
+
                 // Humidity
                 var seriesHumidity = chartHumidity.series[0],
                     shiftHumidity = seriesTemperature.data.length > 20;
+                
+                // Soil Moisture
+                var seriesSoilMoisture = chartSoilMoisture.series[0];
+                    shiftSoilMoisture = seriesSoilMoisture.data.length > 20;
 
                 // Add the Point
                 // Time Temperature\
                 var data1 = [];
-                data1.push(result[0]);
-                data1.push(result[1]);
 
+                data1.push(result[0]); // Date
+                data1.push(result[1]); // Temperature
 
                 // Add the Point
                 // Time Humidity
-                var data2 = [];
-                data2.push(result[0]);
-                data2.push(result[2]);
+                var data2 = []; 
+                data2.push(result[0]); // Date
+                data2.push(result[2]); // Humidity
 
-
+                // Add the Point
+                // Time SoilMoisture
+                var data3 = []; 
+                data3.push(result[0]); // Date
+                data3.push(result[3]); // SoilMoisture
+                
                 chartTemperatue.series[0].addPoint(data1, true, shiftTemperature);
                 chartHumidity.series[0].addPoint(data2, true, shiftHumidity);
+                chartSoilMoisture.series[0].addPoint(data3, true, shiftSoilMoisture);
+
                 $(".sensor1").text("");
                 $(".sensor1").text("Temperature : " +  Math.round(data1[1]) );
 
                 $(".sensor2").text("");
                 $(".sensor2").text("Humidity : " +  Math.round(data2[1]) );
 
+                $(".sensor3").text("");
+                $(".sensor3").text("Soil Moisture : " +  Math.round(data3[1]) );
                 // call it again after one second
                 setTimeout(requestData, 2000);
 
@@ -206,6 +234,39 @@
                 series: [{
                     lineColor: '#1d82b8',
                     name: 'Humidity',
+                    data: []
+                }]
+            });
+
+            chartSoilMoisture = new Highcharts.Chart({
+                chart:
+                    {
+                        renderTo: 'data-soilmoisture',
+                        defaultSeriesType: 'area',
+                        events: {
+                            load: requestData
+                        }
+                    },
+                title:
+                    {
+                        text: 'SoilMoisture'
+                    },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150,
+                    maxZoom: 20 * 1000
+                },
+                yAxis: {
+                    minPadding: 0.2,
+                    maxPadding: 0.2,
+                    title: {
+                        text: 'Value',
+                        margin: 80
+                    }
+                },
+                series: [{
+                    lineColor: '#1d82b8',
+                    name: 'SoilMoisture',
                     data: []
                 }]
             });

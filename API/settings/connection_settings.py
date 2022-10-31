@@ -13,9 +13,8 @@ mqtt_settings = {
 }
 
 openWeatherMap_settings = {
-    'api_key': '6a9e9a96c0af5dbb6029a432d5e4ef99',
+    'api_key': '6e63f4b358ab989e0f85bbbd853a9144',
     'lat': -33.494286,
     'lon': -70.647473,
-    'exclude': 'hourly,daily,minutely',
     'units': 'metric'
 }

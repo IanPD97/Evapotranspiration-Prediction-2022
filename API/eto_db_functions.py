@@ -1,13 +1,12 @@
+import time
+from datetime import datetime
+import pandas as pd
+import numpy as np
+from sqlalchemy import func
 from pyet.combination import pm_fao56
 from pyet.rad_utils import calc_rad_sol_in
 from pyet.meteo_utils import daylight_hours
 import psql_database as db
-from sqlalchemy import func
-from datetime import datetime, timedelta
-import time
-import pandas as pd
-import numpy as np
-from settings.crop_settings import mint
 from DL.CNN import tcn_prediction as tcnn
 
 # VARIABLES
@@ -19,6 +18,7 @@ config = {
     'savename' : 'DL/tcn-models/model_0-',          # Ruta de los modelos entrenados
     'forecast_horizon' : 7                          # Horizonte de predicciones
 }
+
 
 # FUNCIONES
 def tensorflow_ignore():
@@ -42,35 +42,31 @@ def tensorflow_ignore():
     except ImportError:
         pass
 
-def compute_irrigation_value(computed_eto):
-    water_demand = ((computed_eto*mint['kc_ini']*mint['A']*(mint['PC']/100))/mint['Er'])*1000
-    return water_demand
-
 def get_climatic_data(session):
     """ Obtener la información climática del día necesaria para realizar
         el cálculo de la Evapotranspiración, desde la base de datos"""
 
     today = datetime.now().strftime("%d-%m-%Y")
     tmax = session.query(func.max(db.Sensor.temperature)).filter(
-        func.to_char(db.Sensor.value_date, 'DD-MM-YYYY') == today)[0][0]
+        func.to_char(db.Sensor.datetime, 'DD-MM-YYYY') == today)[0][0]
     tmin = session.query(func.min(db.Sensor.temperature)).filter(
-        func.to_char(db.Sensor.value_date, 'DD-MM-YYYY') == today)[0][0]
+        func.to_char(db.Sensor.datetime, 'DD-MM-YYYY') == today)[0][0]
     tmean = session.query(func.avg(db.Sensor.temperature)).filter(
-        func.to_char(db.Sensor.value_date, 'DD-MM-YYYY') == today)[0][0]
+        func.to_char(db.Sensor.datetime, 'DD-MM-YYYY') == today)[0][0]
     rh = session.query(func.avg(db.Sensor.humidity)).filter(
-        func.to_char(db.Sensor.value_date, 'DD-MM-YYYY') == today)[0][0]
+        func.to_char(db.Sensor.datetime, 'DD-MM-YYYY') == today)[0][0]
     rhmin = session.query(func.min(db.Sensor.humidity)).filter(
-        func.to_char(db.Sensor.value_date, 'DD-MM-YYYY') == today)[0][0]
+        func.to_char(db.Sensor.datetime, 'DD-MM-YYYY') == today)[0][0]
     rhmax = session.query(func.max(db.Sensor.humidity)).filter(
-        func.to_char(db.Sensor.value_date, 'DD-MM-YYYY') == today)[0][0]
+        func.to_char(db.Sensor.datetime, 'DD-MM-YYYY') == today)[0][0]
     ssh = session.query(func.avg(db.Sensor.sunshine)).filter(
-        func.to_char(db.Sensor.value_date, 'DD-MM-YYYY') == today)[0][0]
+        func.to_char(db.Sensor.datetime, 'DD-MM-YYYY') == today)[0][0]
     return tmax, tmin, tmean, rh, rhmin, rhmax, ssh
 
 def compute_eto(session,today):
     try:    
-        computed_eto_exists = session.query(func.count(db.computedEto.value_date)).filter(
-        func.to_char(db.computedEto.value_date, 'DD-MM-YYYY') == today)[0][0]
+        computed_eto_exists = session.query(func.count(db.computedEto.date)).filter(
+        func.to_char(db.computedEto.date, 'DD-MM-YYYY') == today)[0][0]
         if computed_eto_exists == 0:
             tmax,tmin,tmean,rh,rhmin,rhmax,ssh = get_climatic_data(session)
             df = pd.DataFrame(
@@ -81,7 +77,7 @@ def compute_eto(session,today):
                         'rh':[rh],
                         'rhmin':[rhmin],
                         'rhmax':[rhmax],
-                        'wind':[0], # Para este experimento no se consideró la velocidad del viento
+                        'wind':[0.5], # Para este experimento se consideró una velocidad del viento mínima para un departamento
                         'ssh':[ssh]}).set_index('date')
             df.index = pd.to_datetime(df.index,format='%d-%m-%Y')
             df['rs'] = calc_rad_sol_in(tindex = df.index,
@@ -97,7 +93,7 @@ def compute_eto(session,today):
                                     rs = df.rs,
                                     lat = config['lat_rad'],
                                     elevation = 20.0).values[0]
-            eto = db.computedEto(value_date = today,computed_eto = computed_eto,irrigation_value = compute_irrigation_value(computed_eto))
+            eto = db.computedEto(date = today,computed_eto = computed_eto, id_crop = 1)
             session.add(eto)
             session.commit()
             print("Evapotranspiración calculada y guardada exitosamente")
@@ -112,10 +108,10 @@ def compute_eto(session,today):
 
 def predict_eto(session,today):
     try:
-        predicted_eto_exists = session.query(func.count(db.predictedEto.value_date)).filter(
-        func.to_char(db.predictedEto.value_date, 'DD-MM-YYYY') == today)[0][0]
+        predicted_eto_exists = session.query(func.count(db.predictedEto.date)).filter(
+        func.to_char(db.predictedEto.date, 'DD-MM-YYYY') == today)[0][0]
         if predicted_eto_exists == 0:
-            eto_back = session.query(db.computedEto.computed_eto).order_by(db.computedEto.value_date.desc()).limit(84)
+            eto_back = session.query(db.computedEto.computed_eto).order_by(db.computedEto.date.desc()).limit(84)
             test = []
             for eto in eto_back:
                 test.append(eto[0])
@@ -125,10 +121,10 @@ def predict_eto(session,today):
                 predicted_values = tcnn.probabilisticForecast(test=test,models=models)
                 predicted_value = predicted_values[0][0].sample(1000).mean()
                 test = pd.Series(np.insert(np.array(test),len(test),predicted_value))
-                values = db.predictedEto(value_date = datetime.now().strftime("%d-%m-%Y"),
-                                        prediction_date = (datetime.now()+timedelta(days = i+1)).strftime("%d-%m-%Y"),
+                values = db.predictedEto(date = datetime.now().strftime("%d-%m-%Y"),
+                                        forecast_horizon = i+1,
                                         predicted_eto = predicted_value,
-                                        predicted_irrigation_value = compute_irrigation_value(predicted_value))
+                                        id_crop = 1)
                 session.add(values)
                 session.commit()
                 print(f'Predicción a {i+1} dias de horizonte guardada exitosamente')
