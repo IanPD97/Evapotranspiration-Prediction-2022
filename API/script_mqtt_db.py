@@ -7,6 +7,7 @@ import requests
 from datetime import datetime, timedelta
 import math
 import os
+import time
 
 import psql_database as db
 from settings.connection_settings import mqtt_settings as settings
@@ -51,7 +52,7 @@ def read_initial_irrigation():
     f = open (path + '/settings/initial_irrigation.txt','r')
     content = f.read()
     f.close()
-    if content == 'False':
+    if content == 'False\n':
         return False
     return True
 
@@ -69,6 +70,11 @@ def read_irrigation():
 def write_irrigation(water_amount):
     f = open(path + '/settings/irrigation.txt','w')
     f.write(str(water_amount))
+    f.close()
+    
+def write_irr(info):
+    f = open(path + '/logs/irr.txt','w')
+    f.write(str(info))
     f.close()
 
 def read_day():
@@ -91,8 +97,8 @@ def getSoilPercent(now):
     yesterday_water = session.query(db.waterAmount.water_amount).filter(
         func.to_char(db.waterAmount.date, 'DD-MM-YYYY') == yesterday.strftime("%d-%m-%Y"))[0][0]
     drip_delay = yesterday_water * (water['dripseconds'] / water['dripwater']) # Caudal del riego por goteo
-    post_irrigation = (yesterday + timedelta(seconds = drip_delay)).strftime("%d-%m-%Y %H:%M")
-    soil_yesterday = session.query(func.avg(db.Sensor.soilMoisture3)).filter(
+    post_irrigation = (yesterday + timedelta(seconds = drip_delay+3600)).strftime("%d-%m-%Y %H:%M")
+    soil_yesterday = session.query(func.min(db.Sensor.soilMoisture3)).filter(
         func.to_char(db.Sensor.datetime, 'DD-MM-YYYY HH24:MI') == post_irrigation)[0][0]
     if soil_yesterday == None:
         soil_yesterday = session.query(func.max(db.Sensor.soilMoisture3)).filter(
@@ -121,8 +127,11 @@ def irrigationSignal(now):
         siempre y cuando se haya ejecutado el script programado"""
     eto_calculated = session.query(func.count(db.computedEto.computed_eto)).filter(
                 func.to_char(db.computedEto.date, 'DD-MM-YYYY') == now.strftime("%d-%m-%Y"))[0][0]
-    irrigated = session.query(func.count(db.waterAmount.water_amount)).filter(
-                func.to_char(db.waterAmount.date, 'DD-MM-YYYY') == now.strftime("%d-%m-%Y"))[0][0]
+    try:
+        irrigated = session.query(func.count(db.waterAmount.water_amount)).filter(
+                    func.to_char(db.waterAmount.date, 'DD-MM-YYYY') == now.strftime("%d-%m-%Y"))[0][0]
+    except:
+        irrigated = 0
 
     if eto_calculated != 0 and irrigated == 0:
         if read_initial_irrigation():
@@ -139,16 +148,13 @@ def irrigationSignal(now):
                 print("No hay datos para calcular el riego")
         caudal = water['water']/water['seconds']
         irrigation_value = water_value/caudal
-        if read_irrigation() >= 0 and read_day() == 2:
+        if read_irrigation() >= 0 and read_day() == 1:
             value = float(irrigation_value) + read_irrigation() + 0.08
             sessionMQTT.publish('relay/Signal',value)
+            write_irr(now.strftime("%d-%m-%Y")+' '+str(value))
             write_irrigation(0)
             write_day(0)
             print('enviando señal riego', value)
-        elif read_irrigation() >= 0 and read_day() == 1:
-            value = float(irrigation_value) + read_irrigation()
-            write_irrigation(value)
-            write_day(2)
         elif read_irrigation() == 0 and read_day() == 0:
             write_irrigation(irrigation_value)
             write_day(1)
@@ -168,10 +174,8 @@ def MQTTtoDB(client,userdata,msg):
         y guardar en la base de datos"""
     data = json.loads(str(msg.payload)[2:-1])
     saveData(data)
-    print(data)
     actual_time = datetime.now()
     irrigationSignal(actual_time)
-
 
 sessionMQTT = mqtt.Client()
 sessionMQTT.on_connect = ConnectMQTT

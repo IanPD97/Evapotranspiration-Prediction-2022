@@ -8,9 +8,12 @@ from datetime import datetime
 from settings.crop_settings import mint
 import pandas as pd
 import time
+import os
 
 engine = connection.get_engine_from_settings()
 Base = declarative_base()
+path = os.path.dirname(os.path.realpath(__file__))
+path = path.replace('\\',"/")
 
 class Plant(Base):
     __tablename__ = 'plant'
@@ -74,21 +77,21 @@ if __name__ == '__main__':
     plant = Plant(name = mint['plant'], kc_ini = mint['kc_ini'] , kc_med = mint['kc_med'] , kc_fin = mint['kc_med'] , created_at = datetime.now())
     session.add(plant)
     session.commit()
-    id_plant = session.query(Plant.id_plant).filter(Plant.name == 'mint')[0][0]
+    id_plant = session.query(Plant.id_plant).filter(Plant.name == 'peppermint')[0][0]
     crop = Crop(id_plant = id_plant, er = mint['Er'],a = mint['A'], pc = mint['PC'], created_at = datetime.now())
     session.add(crop)
     session.commit()
 
 
-    # data = pd.read_csv('C:/Users/Naisaile/Documents/PROYECTO-TESIS/Evapotranspiration-Prediction-2022/API/data/data.csv')
-    # df = data[['Data','Eto']].set_index('Data')
-    # id_crop = session.query(Crop.id_crop).filter(Crop.id_plant == id_plant)[0][0]
-    # for i in range(len(df)):
-    #     date = df.index[i:i+1][0]
-    #     date = datetime.strptime(date, '%Y-%m-%d').strftime("%d-%m-%Y")
-    #     eto = df.Eto[i:i+1][0]
-    #     Eto = computedEto(date = date, computed_eto = eto, id_crop = id_crop)
-    #     session.add(Eto)
-    #     session.commit()
-    #     time.sleep(0.2)
-    
+    data = pd.read_csv(path +'/data/data.csv')
+    df = data[['Data','Eto']].set_index('Data')
+    id_crop = session.query(Crop.id_crop).filter(Crop.id_plant == id_plant)[0][0]
+    for i in range(len(df)):
+        date = df.index[i:i+1][0]
+        date = datetime.strptime(date, '%d-%m-%Y').strftime("%d-%m-%Y")
+        eto = df.Eto[i:i+1][0]
+        Eto = computedEto(date = date, computed_eto = eto, id_crop = id_crop)
+        session.add(Eto)
+        session.commit()
+        time.sleep(0.02)
+    print('Finalizado! ')

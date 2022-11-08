@@ -8,6 +8,7 @@ from pyet.rad_utils import calc_rad_sol_in
 from pyet.meteo_utils import daylight_hours
 import psql_database as db
 from DL.CNN import tcn_prediction as tcnn
+import time
 
 # VARIABLES
 config = {
@@ -77,7 +78,7 @@ def compute_eto(session,today):
                         'rh':[rh],
                         'rhmin':[rhmin],
                         'rhmax':[rhmax],
-                        'wind':[0.5], # Para este experimento se consideró una velocidad del viento mínima para un departamento
+                        'wind':[0.05], 
                         'ssh':[ssh]}).set_index('date')
             df.index = pd.to_datetime(df.index,format='%d-%m-%Y')
             df['rs'] = calc_rad_sol_in(tindex = df.index,
@@ -97,7 +98,6 @@ def compute_eto(session,today):
             session.add(eto)
             session.commit()
             print("Evapotranspiración calculada y guardada exitosamente")
-            time.sleep(1)
             return True
         else:
             print("Ya se registró la evapotranspiración correspondiente al día de hoy")
@@ -113,8 +113,11 @@ def predict_eto(session,today):
         if predicted_eto_exists == 0:
             eto_back = session.query(db.computedEto.computed_eto).order_by(db.computedEto.date.desc()).limit(84)
             test = []
+            t = []
             for eto in eto_back:
-                test.append(eto[0])
+                t.append(eto[0])
+            for i in range(len(t)):
+                test.append(t[len(t)-i-1])
             test = pd.Series(test)
             models = tcnn.loadModels(savename = config['savename'], num = config['num'])
             for i in range(config['forecast_horizon']):
@@ -128,10 +131,11 @@ def predict_eto(session,today):
                 session.add(values)
                 session.commit()
                 print(f'Predicción a {i+1} dias de horizonte guardada exitosamente')
-                return True
+                time.sleep(1)
         else:
             print("Ya se realizaron las predicciones correspondientes a este día")
-            return True
-    except:
-        print("La base de datos no contiene valores válidos")
-        return False
+            
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        

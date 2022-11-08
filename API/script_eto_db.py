@@ -3,6 +3,7 @@ from datetime import datetime
 import psql_database as db
 import eto_db_functions as etodb
 import warnings
+import time
 
 warnings.filterwarnings("ignore")
 etodb.tensorflow_ignore()
@@ -13,5 +14,6 @@ Session = sessionmaker(engine)
 session = Session()
 today = datetime.now().strftime("%d-%m-%Y")
 
-if (etodb.compute_eto(session,today)):
-    etodb.predict_eto(session,today)
+etodb.compute_eto(session,today)
+time.sleep(0.5)
+etodb.predict_eto(session,today)

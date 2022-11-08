@@ -19,7 +19,7 @@ water = {
     'soilwater': 10,   # 'soilwater' ml de agua
     # Relacion = soilwater/soilmoisture
 
-    'dripseconds': 1800+3600,  # El riego por goteo tarda 'dripseconds' segundos en regar ///1800 = 30 min, 3600 umbral
+    'dripseconds': 1800,  # El riego por goteo tarda 'dripseconds' segundos en regar ///1800 = 30 min, 3600 umbral
     'dripwater': 10         # 'dripwater' ml de agua
     # DripCaudal = dripwater/dripseconds
 }
