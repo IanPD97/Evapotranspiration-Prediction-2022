@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Riego Dashboard</title>
+        <!--CSS-->
+        <link rel="stylesheet" href="../static/css/style.css"/>
+        <!--W3-->
+        <link rel="stylesheet" href="../static/css/w3.css">
+        <!--GOOGLE FONTS ICONS-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="navigation">
+                
+                <ul>
+                    <li>
+                        <a href="#">
+                            <span class="icon"><span class="material-symbols-outlined">sprinkler</span></span>
+                            <span class="title">Prototipo riego</span>
+                            
+                        </a>
+                    </li>
+                    <li class="hovered">
+                        <a href="./index.html">
+                            <span class="icon"><span class="material-symbols-outlined">home</span></span>
+                            <span class="title">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./forecast.html">
+                            <span class="icon"><span class="material-symbols-outlined">query_stats</span></span>
+                            <span class="title">Pronósticos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./historical.html">
+                            <span class="icon"><span class="material-symbols-outlined">database</span></span>
+                            <span class="title">Datos históricos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./ref.html">
+                            <span class="icon"><span class="material-symbols-outlined">school</span></span>
+                            <span class="title">Referencias</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div> <!--END NAVIGATION-->
+
+            <!--MAIN-->
+            <div class="main">
+                <div class="topbar">
+                    <div class="toggle">
+                        <span class="material-symbols-outlined">menu</span>
+                    </div>
+                </div>
+                
+                <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+                <div class="w3-main" style="margin-left:300px;"></div>
+
+                    <!--CARDS-->                    
+                    <div class="w3-row-padding ">
+                        <div class="w3-half w3-margin-bottom">
+                          <div class="w3-container w3-white w3-hover-primary w3-box-shadow w3-round-large w3-padding-16">
+                            <div class="w3-left"><span class="material-symbols-outlined">thermometer</span></div>
+                            <div class="w3-right">
+                                <div class="sensor-value"><div class="temp"></div></div>
+                              </div>
+                              <div class="w3-clear"></div>
+                              <div class="sensor-name">Temperatura</div>
+                          </div>
+                        </div>
+                        <div class="w3-half w3-margin-bottom">
+                          <div class="w3-container w3-white w3-hover-primary w3-box-shadow w3-round-large w3-padding-16">
+                            <div class="w3-left"><span class="material-symbols-outlined">humidity_percentage</span></div>
+                            <div class="w3-right">
+                                <div class="sensor-value"><div class="hum"></div></div>
+                              </div>
+                              <div class="w3-clear"></div>
+                              <div class="sensor-name">Humedad</div>
+                          </div>
+                        </div>
+                        
+                    </div>
+                    <div class="w3-row-padding"> 
+                        <div class="w3-third w3-margin-bottom">
+                            <div class="w3-container w3-white w3-hover-primary w3-box-shadow w3-round-large w3-padding-16">
+                             <div class="w3-left"><span class="material-symbols-outlined">potted_plant</span></div>
+                             <div class="w3-right">
+                                <div class="sensor-value"><div class="soil1"></div></div>
+                              </div>
+                              <div class="w3-clear"></div>
+                              <div class="sensor-name">Suelo 1</div>
+                           </div>
+                         </div>   
+                        <div class="w3-third w3-margin-bottom">
+                          <div class="w3-container w3-white w3-hover-primary w3-box-shadow w3-round-large w3-padding-16">
+                            <div class="w3-left"><span class="material-symbols-outlined">potted_plant</span></div>
+                            <div class="w3-right">
+                                <div class="sensor-value"><div class="soil2"></div></div>
+                            </div>
+                            <div class="w3-clear"></div>
+                            <div class="sensor-name">Suelo 2</div>
+                          </div>
+                        </div>
+                        <div class="w3-third w3-margin-bottom">
+                            <div class="w3-container w3-white w3-hover-primary w3-box-shadow w3-round-large w3-padding-16">
+                              <div class="w3-left"><span class="material-symbols-outlined">potted_plant</span></div>
+                              <div class="w3-right">
+                                <div class="sensor-value"><div class="soil3"></div></div>
+                              </div>
+                              <div class="w3-clear"></div>
+                              <div class="sensor-name">Suelo 3</div>
+                            </div>
+                          </div>
+                    </div><!--END CARDS-->
+
+                    <!--CHARTS-->
+                    <div class="w3-section w3-padding-16">
+                    <div class="w3-row-padding">
+                        <div class="w3-half w3-margin-bottom">
+                            <div class="w3-container w3-white w3-box-shadow w3-round-large w3-padding-16">
+                                <div class="sensor-name-chart">Temperatura °C</div>
+                                <div class="chart-container">
+                                    <canvas id="chart-temperature"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w3-half w3-margin-bottom">
+                            <div class="w3-container w3-white w3-box-shadow w3-round-large w3-padding-16">
+                                <div class="sensor-name-chart">Humedad %</div>
+                                <div class="chart-container">
+                                    <canvas id="chart-humidity"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    <div class="w3-row-padding">
+                        <div class="w3-third w3-margin-bottom">
+                            <div class="w3-container w3-white w3-box-shadow w3-round-large w3-padding-16">
+                                <div class="sensor-name-chart">Suelo 1 %</div>
+                                <div class="chart-container">
+                                    <canvas id="chart-soil1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w3-third w3-margin-bottom">
+                            <div class="w3-container w3-white w3-box-shadow w3-round-large w3-padding-16">
+                                <div class="sensor-name-chart">Suelo 2 %</div>
+                                <div class="chart-container">
+                                    <canvas id="chart-soil2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w3-third w3-margin-bottom">
+                            <div class="w3-container w3-white w3-box-shadow w3-round-large w3-padding-16">
+                                <div class="sensor-name-chart">Suelo 3 %</div>
+                                <div class="chart-container">
+                                    <canvas id="chart-soil3"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div> <!--END MAIN-->
+                    
+        </div> <!--END NAVIGATION-->
+
+
+        </div> <!--END CONTAINER-->
+
+
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <!--Chart.js-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.js" integrity="sha512-d6nObkPJgV791iTGuBoVC9Aa2iecqzJRE0Jiqvk85BhLHAPhWqkuBiQb1xz2jvuHNqHLYoN3ymPfpiB1o+Zgpw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!--Script local-->
+        <script src="../static/js/script.js"></script>
+
+    </body>
+
+
+</html>
