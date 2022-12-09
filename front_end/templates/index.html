@@ -5,8 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Riego Dashboard</title>
-        <!--CSS-->
-        <link rel="stylesheet" href="../static/css/style.css"/>
         <!--W3-->
         <link rel="stylesheet" href="../static/css/w3.css">
         <!--GOOGLE FONTS ICONS-->
@@ -44,6 +42,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="./historical-water.html">
+                            <span class="icon"><span class="material-symbols-outlined">sprinkler</span></span>
+                            <span class="title">Agua histórica</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="./ref.html">
                             <span class="icon"><span class="material-symbols-outlined">school</span></span>
                             <span class="title">Referencias</span>
@@ -64,7 +68,11 @@
                 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
                 <div class="w3-main" style="margin-left:300px;"></div>
 
-                    <!--CARDS-->                    
+                    <!--CARDS--> 
+                    <div class="w3-row-padding">
+                    <div class="w3-quarter">
+                    <button class="w3-button w3-primary w3-margin-bottom w3-disabled" onclick="//change()" id="irrigate">Regar</button></div>
+                    </div>
                     <div class="w3-row-padding ">
                         <div class="w3-half w3-margin-bottom">
                           <div class="w3-container w3-white w3-hover-primary w3-box-shadow w3-round-large w3-padding-16">
@@ -183,6 +191,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.js" integrity="sha512-d6nObkPJgV791iTGuBoVC9Aa2iecqzJRE0Jiqvk85BhLHAPhWqkuBiQb1xz2jvuHNqHLYoN3ymPfpiB1o+Zgpw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <!--Script local-->
         <script src="../static/js/script.js"></script>
+        <script src="../static/js/index.js"></script>
 
     </body>
 

@@ -5,8 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Riego Dashboard</title>
-        <!--CSS-->
-        <link rel="stylesheet" href="../static/css/style.css"/>
         <!--W3-->
         <link rel="stylesheet" href="../static/css/w3.css">
         <!--GOOGLE FONTS ICONS-->
@@ -44,6 +42,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="./historical-water.html">
+                            <span class="icon"><span class="material-symbols-outlined">sprinkler</span></span>
+                            <span class="title">Agua histórica</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="./ref.html">
                             <span class="icon"><span class="material-symbols-outlined">school</span></span>
                             <span class="title">Referencias</span>
@@ -65,52 +69,8 @@
                 <div class="w3-main" style="margin-left:300px;"></div>
 
                 <!--CONTENT-->                    
-                <div class="w3-container w3-round-large">
+                <div class="w3-container w3-round-large" id="forecast-table">
                   
-                    <table class="w3-table-all w3-large ">
-                      <thead>
-                        <tr class="w3-primary">
-                          <th>Fecha</th>
-                          <th>Evapotranspiración</th>
-                          <th>Agua</th>
-                        </tr>
-                      </thead>
-                      <tr>
-                        <td>01/11/2022</td>
-                        <td>3.2</td>
-                        <td>50</td>
-                      </tr>
-                      <tr>
-                        <td>02/11/2022</td>
-                        <td>3.8</td>
-                        <td>75</td>
-                      </tr>
-                      <tr>
-                        <td>03/11/2022</td>
-                        <td>2.9</td>
-                        <td>40</td>
-                      </tr>
-                      <tr>
-                        <td>04/11/2022</td>
-                        <td>4.4</td>
-                        <td>81</td>
-                      </tr>
-                      <tr>
-                        <td>05/11/2022</td>
-                        <td>0.1</td>
-                        <td>10</td>
-                      </tr>
-                      <tr>
-                        <td>06/11/2022</td>
-                        <td>4.4</td>
-                        <td>82</td>
-                      </tr>
-                      <tr>
-                        <td>07/11/2022</td>
-                        <td>4.5</td>
-                        <td>89</td>
-                      </tr>
-                    </table>
                   </div>   
 
 
@@ -127,6 +87,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.js" integrity="sha512-d6nObkPJgV791iTGuBoVC9Aa2iecqzJRE0Jiqvk85BhLHAPhWqkuBiQb1xz2jvuHNqHLYoN3ymPfpiB1o+Zgpw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <!--Script local-->
         <script src="../static/js/script.js"></script>
+        <script src="../static/js/forecast.js"></script>
+
 
     </body>
 

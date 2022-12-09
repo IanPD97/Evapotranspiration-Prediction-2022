@@ -25,15 +25,18 @@ def saveData(data):
     # Api de OpenWeatherMap para obtener la duración relativa del sol
     # Llamadas cada 2 minutos, para no sobrepasar el límite gratuito de 1000 diarias
     now = datetime.now()
-    if now.minute%10 == 0 and now.second <= settings['interval']:   
-        url = f'https://api.openweathermap.org/data/2.5/weather?lat={api_settings["lat"]}&lon={api_settings["lon"]}&units={api_settings["units"]}&appid={api_settings["api_key"]}'
-        req = requests.get(url)
-        api_data = req.json()
-        try:
-            ssh = 1 - (api_data['clouds']['all']*0.01)
-        except:
+    try:
+        if now.minute%10 == 0 and now.second <= settings['interval']:   
+            url = f'https://api.openweathermap.org/data/2.5/weather?lat={api_settings["lat"]}&lon={api_settings["lon"]}&units={api_settings["units"]}&appid={api_settings["api_key"]}'
+            req = requests.get(url)
+            api_data = req.json()
+            try:
+                ssh = 1 - (api_data['clouds']['all']*0.01)
+            except:
+                ssh = None
+        else:
             ssh = None
-    else:
+    except:
         ssh = None
     
     # Guardado de datos en la base de datos
@@ -155,14 +158,21 @@ def irrigationSignal(now):
             write_irrigation(0)
             write_day(0)
             print('enviando señal riego', value)
+            values = db.waterAmount(date = now.strftime("%d-%m-%Y"),
+                        water_amount = water_value,
+                        id_crop = 1)
+            session.add(values)
+            session.commit()
+            return 0
         elif read_irrigation() == 0 and read_day() == 0:
             write_irrigation(irrigation_value)
             write_day(1)
-        values = db.waterAmount(date = now.strftime("%d-%m-%Y"),
-                                water_amount = water_value,
-                                id_crop = 1)
-        session.add(values)
-        session.commit()
+            values = db.waterAmount(date = now.strftime("%d-%m-%Y"),
+            water_amount = water_value,
+            id_crop = 1)
+            session.add(values)
+            session.commit()
+            return 0
 
 
 def ConnectMQTT(client,userdata,flags,rc):
@@ -174,6 +184,7 @@ def MQTTtoDB(client,userdata,msg):
         y guardar en la base de datos"""
     data = json.loads(str(msg.payload)[2:-1])
     saveData(data)
+    print(data)
     actual_time = datetime.now()
     irrigationSignal(actual_time)
 
